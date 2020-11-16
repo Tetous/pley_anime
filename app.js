@@ -10,7 +10,12 @@ const LocalStrategy = require("passport-local").Strategy;
 const expressSesion = require("express-session");
 
 //Config Import
-const config = require("./config");
+try{
+	var config = require("./config");
+} catch(err){
+	console.log("Not working locally");
+	console.log(err);
+}
 
 //Route Imports
 const animeRoutes = require("./routes/anime")
@@ -30,7 +35,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
 app.use(morgan("tiny"));
 app.use(expressSesion({
-	secret: "fjklsjkfldjsklfjkdsjfkldsjfkldsjfklds",
+	secret: process.env.ES_SECRET || config.expressSession.secret,
 	resave: false,
 	saveUninitialized: false
 }))
@@ -46,7 +51,13 @@ passport.use(new LocalStrategy(User.authenticate()));
 // seed();
 
 //Connect to DB
-mongoose.connect(config.db.connection, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+try{
+	mongoose.connect(config.db.connection, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+} catch(err) {
+	console.log("Not working locally");
+	mongoose.connect(process.ENV.DB_CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+}
+
 
 //Current User Middleware
 app.use((req,res,next) =>{
@@ -60,4 +71,4 @@ app.use("/", authRoutes)
 app.use("/anime", animeRoutes);
 app.use("/anime/:id/comments", commentsRoutes);
 
-app.listen(3000, ()=>{console.log("Yelp Clone is running")});
+app.listen(process.env.PORT ||3000, ()=>{console.log("Yelp Clone is running")});
