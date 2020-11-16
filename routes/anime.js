@@ -1,0 +1,116 @@
+const express = require("express");
+const router = express.Router();
+const Anime = require("../models/anime");
+const Comment = require("../models/comment");
+const isLoggedIn = require("../utils/isLoggedIn");
+const checkAnimeOwner = require("../utils/checkAnimeOwner")
+
+router.get("/", async (req,res) =>{
+	try{ 
+	const anime = await Anime.find().exec()
+	  res.render("Anime", {anime});
+	} catch(err) {
+		console.log(err);
+		res.send("You Broke It0!")
+    } 
+})
+
+router.post("/", isLoggedIn, async (req,res) =>{
+	const genre = req.body.genre.toLowerCase();
+	const newAnime = {
+		title: req.body.title,
+		description: req.body.description,
+		creator: req.body.creator,
+		studio: req.body.studio,
+		date: req.body.date,
+		source: req.body.source,
+		episodes: req.body.episodes,
+		genre,
+		age_restriction: !!req.body.age_restriction,
+		image: req.body.img,
+		owner: {
+			id: req.user._id,
+			username: req.user.username
+		}
+	}
+	
+	try{
+		const anime = await Anime.create(newAnime)
+		console.log(anime)
+		res.redirect("/anime/" +anime._id);
+	} catch(err) {
+		console.log(err);
+		res.send("You Broke It");
+	}	
+})
+
+router.get("/new", isLoggedIn, (req,res) =>{
+	res.render("Anime_New");
+})
+
+router.get("/search", async (req,res) =>{
+	try{
+		const anime = await Anime.find({
+			$text:{
+				$search: req.query.term
+			}
+		})
+		res.render("Anime", {anime})
+	} catch(err) {
+		console.log(err);
+		res.send("Broken Search");
+	}
+})
+
+router.get("/:id", async (req,res) =>{
+	try{ 
+	const anime = await Anime.findById(req.params.id).exec()
+	const comments = await Comment.find({animeId: req.params.id})
+     res.render("Anime_Display", {anime, comments})	
+	} catch (err) {
+		console.log(err);
+		res.send("Broken Anime ID");
+	}
+})
+
+router.get("/:id/edit", checkAnimeOwner, async (req,res) =>{
+	  const anime = await Anime.findById(req.params.id).exec()
+	  res.render("Anime_Edit",{anime});
+})
+
+
+router.put("/:id", checkAnimeOwner, async (req,res) =>{
+	const genre = req.body.genre.toLowerCase();
+	const updatedAnime = {
+		title: req.body.title,
+		description: req.body.description,
+		creator: req.body.creator,
+		studio: req.body.studio,
+		date: req.body.date,
+		source: req.body.source,
+		episodes: req.body.episodes,
+		genre,
+		age_restriction: !!req.body.age_restriction,
+		image: req.body.img
+	}
+	try{
+	 const anime = await Anime.findByIdAndUpdate(req.params.id, updatedAnime, {new: true}).exec()
+	.res.redirect(`/anime/${req.params.id}`)
+	 } catch (err) {
+	console.log(err);
+	  res.send("You Broke it")
+	 }
+})
+
+router.delete("/:id", checkAnimeOwner, async (req,res) =>{
+	try{
+	const deletedAnime = await Anime.findByIdAndDelete(req.params.id).exec()
+	console.log(deletedAnime);
+	res.redirect("/anime")
+	} catch(err){
+		console.log(err);
+		res.send("You Broke It");
+	}
+	})
+
+module.exports = router;

@@ -1,0 +1,15 @@
+<%- include("partials/header") %>
+
+<div class="container">
+	<h1>Add New Comment</h1>
+	<form action="/anime/<%= animeId %>/comments" method="POST">
+		<div class="form-group">
+			<label for="text">Comment Text</label>
+			<textarea name="text" id="text" class="form-control" rows="8" cols="80" placeholder="Comment Text Here" required></textarea>
+		</div>
+		<input type="hidden" name="animeId" value="<%= animeId %>">
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+
+<%- include("partials/footer") %>
