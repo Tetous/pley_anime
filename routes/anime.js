@@ -62,6 +62,16 @@ router.get("/search", async (req,res) =>{
 	}
 })
 
+router.get("/genre/:genre", async(req,res) =>{
+	const validGenres = ["action","slice-of-life","sports","comedy","horror","thirller"];
+	if(validGenres.includes(req.params.genre.toLowerCase())){
+		const anime = await Anime.find({genre: req.params.genre}).exec();
+		res.render("Anime",{anime})
+	} else {
+		res.send("Please enter a valid genre");
+	}
+});
+
 router.get("/:id", async (req,res) =>{
 	try{ 
 	const anime = await Anime.findById(req.params.id).exec()
@@ -95,7 +105,7 @@ router.put("/:id", checkAnimeOwner, async (req,res) =>{
 	}
 	try{
 	 const anime = await Anime.findByIdAndUpdate(req.params.id, updatedAnime, {new: true}).exec()
-	.res.redirect(`/anime/${req.params.id}`)
+	res.redirect(`/anime/${req.params.id}`)
 	 } catch (err) {
 	console.log(err);
 	  res.send("You Broke it")
