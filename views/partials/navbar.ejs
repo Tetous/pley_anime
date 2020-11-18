@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/anime">
-	<img src="/img/AnimeEye1.svg" alt="brand-image" height="40" width="50">
-	</a>
+    <img src="/img/AnimeEye1.svg" alt="brand-image" height="40" width="50">
+  </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -19,27 +19,27 @@
           <a class="dropdown-item" href="/anime/genre/action">Action</a>
           <a class="dropdown-item" href="/anime/genre/slice-of-life">Slice of Life</a>
           <a class="dropdown-item" href="/anime/genre/sports">Sports</a>
-		  <a class="dropdown-item" href="/anime/genre/comedy">Comedy</a>
-		  <a class="dropdown-item" href="/anime/genre/horror">Horror</a>
-		  <a class="dropdown-item" href="/anime/genre/thriller">Thriller</a>
+          <a class="dropdown-item" href="/anime/genre/comedy">Comedy</a>
+          <a class="dropdown-item" href="/anime/genre/horror">Horror</a>
+          <a class="dropdown-item" href="/anime/genre/thriller">Thriller</a>
         </div>
- 
-		<% if(user){ %>
-		       </li>
-		<li class="nav-item">
+
+        <% if(user){ %>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="/anime/new">Add Anime</a>
       </li>
-			<li class="nav-item">
-	    		<a class="nav-link" href="/Logout">Log Out</a>
-	    	</li>	
-		 <% } else { %>
-			<li class="nav-item">
-		   		<a class="nav-link" href="/Login">Log In</a>
-	 		</li>
-			<li class="nav-item">
-		   		<a class="nav-link" href="/Signup">Sign Up</a>
-	 		</li>
-	<% } %>
+      <li class="nav-item">
+        <a class="nav-link" href="/Logout">Log Out</a>
+      </li>
+      <% } else { %>
+      <li class="nav-item">
+        <a class="nav-link" href="/Login">Log In</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/Signup">Sign Up</a>
+      </li>
+      <% } %>
     </ul>
     <form class="form-inline my-2 my-lg-0" action="/anime/search" METHOD="GET">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" name="term" aria-label="Search">
@@ -47,3 +47,23 @@
     </form>
   </div>
 </nav>
+
+<div class="container mt=2">
+  <% if(successMessage && successMessage.length>0){ %>
+  <div class="alert alert-success fade show" role="alert">
+    <%= successMessage %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <% } %>
+
+  <% if(errorMessage && errorMessage.length>0){ %>
+  <div class="alert alert-warning fade show" role="alert">
+    <%= errorMessage %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <% } %>
+</div>
