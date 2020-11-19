@@ -4,7 +4,7 @@ const animeSchema = new mongoose.Schema({
   description: String,
   creator: String,
   studio: String,
-  date: Date,
+  date: String,
   source: String,
   episodes: Number,
   genre: String,

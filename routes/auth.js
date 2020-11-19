@@ -14,8 +14,7 @@ router.post("/signup", async (req,res) =>{
 			username: req.body.username,
 			email: req.body.email
 		}), req.body.password)
-		
-		console.log(newUser)
+		req.flash("success", `Signed you up as ${newUser.username}`);
 		passport.authenticate("local")(req,res, ()=>{
 			res.redirect("/anime");
 		})
@@ -31,12 +30,15 @@ router.get("/login", (req,res) =>{
 
 router.post("/login", passport.authenticate("local",{
 	successRedirect: "/Anime",
-	failureRedirect: "/Login"
+	failureRedirect: "/Login",
+	failureFlash: true,
+	successFlash: "Logged in successfuly"
 }));
 
 
 router.get("/logout", (req,res) =>{
 	req.logout();
+	req.flash("success", "Logged you out")
 	res.redirect("/Anime")
 })
 

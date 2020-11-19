@@ -36,11 +36,12 @@ router.post("/", isLoggedIn, async (req,res) =>{
 	
 	try{
 		const anime = await Anime.create(newAnime)
-		console.log(anime)
+		req.flash("success","Anime created")
 		res.redirect("/anime/" +anime._id);
 	} catch(err) {
 		console.log(err);
-		res.send("You Broke It");
+		req.flash("error","Error creating anime")
+		res.redirect("/Anime")
 	}	
 })
 
@@ -105,21 +106,24 @@ router.put("/:id", checkAnimeOwner, async (req,res) =>{
 	}
 	try{
 	 const anime = await Anime.findByIdAndUpdate(req.params.id, updatedAnime, {new: true}).exec()
+	 req.flash("success","Anime updated")
 	res.redirect(`/anime/${req.params.id}`)
 	 } catch (err) {
 	console.log(err);
-	  res.send("You Broke it")
+	req.flash("error","Error updating anime")
+	 res.redirect("Anime")
 	 }
 })
 
 router.delete("/:id", checkAnimeOwner, async (req,res) =>{
 	try{
 	const deletedAnime = await Anime.findByIdAndDelete(req.params.id).exec()
-	console.log(deletedAnime);
+	req.flash("success","Anime deleted")
 	res.redirect("/anime")
 	} catch(err){
 		console.log(err);
-		res.send("You Broke It");
+		req.flash("error","Error deleting anime");
+		res.redirect("back");
 	}
 	})
 
