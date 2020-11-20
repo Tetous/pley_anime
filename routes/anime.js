@@ -31,7 +31,9 @@ router.post("/", isLoggedIn, async (req,res) =>{
 		owner: {
 			id: req.user._id,
 			username: req.user.username
-		}
+		},
+		upvotes: [],
+		downvotes: []
 	}
 	
 	try{
@@ -72,6 +74,12 @@ router.get("/genre/:genre", async(req,res) =>{
 		res.send("Please enter a valid genre");
 	}
 });
+
+router.post("/vote", isLoggedIn, (req,res) =>{
+	res.json({
+		message: "Voted!"
+	})
+})
 
 router.get("/:id", async (req,res) =>{
 	try{ 
