@@ -75,11 +75,13 @@ router.get("/genre/:genre", async(req,res) =>{
 	}
 });
 
-router.post("/vote", isLoggedIn, (req,res) =>{
+router.post("/vote", isLoggedIn, async (req,res) =>{
 	console.log(req.body)
-	res.json({
-		message: "Voted!"
-	})
+	
+	const anime = await Anime.findById(req.body.animeId)
+	console.log(anime);
+	
+	res.json(anime);
 })
 
 router.get("/:id", async (req,res) =>{
