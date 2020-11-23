@@ -17,11 +17,8 @@ const animeSchema = new mongoose.Schema({
     },
     username: String
   },
- upvote: [String],
- downvote: [String]
- 
-	
-	
+ upvotes: [String],
+ downvotes: [String]	
 });
 
 animeSchema.index({
