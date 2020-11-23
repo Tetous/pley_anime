@@ -4,7 +4,7 @@ const bodyParser = require("body-parser")
 const app = express();
 const mongoose = require('mongoose');
 const methodOverride = require("method-override");
-// const morgan = require("morgan");
+const morgan = require("morgan");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const expressSesion = require("express-session");
@@ -37,7 +37,7 @@ app.use(express.json({
 }));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
-// app.use(morgan("tiny"));
+app.use(morgan("tiny"));
 app.use(expressSesion({
 	secret: process.env.ES_SECRET || config.expressSession.secret,
 	resave: false,
