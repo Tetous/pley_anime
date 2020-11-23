@@ -88,13 +88,14 @@ router.post("/vote", isLoggedIn, async (req,res) =>{
 		if(req.body.voteType === "up"){
 			anime.upvotes.push(req.user.username);
 			anime.save()
-			response.message = "Message tallied"
+			response  ={message: "Upvote tallied", code: 1}
 		} else if(req.body.voteType === "down"){
 			anime.downvotes.push(req.user.username);
 			anime.save()
-			response.message = "Message tallied"
+			response = {message: "Downvote tallied", code: -1}
 		} else {
-			response.message = "Error 1"
+		 response  = {message: "Error 1", code: "err"}
+
 		}
 		
 		
@@ -102,36 +103,36 @@ router.post("/vote", isLoggedIn, async (req,res) =>{
 		if(req.body.voteType === "up"){		
 		   anime.upvotes.splice(alreadyUpvoted, 1)
 			anime.save();
-			response.message = "Upvote removed"
+			response = {message: "Upvote removed", code: 0}
 		} else if(req.body.voteType === "down"){
 		   anime.upvotes.splice(alreadyUpvoted, 1)			
 			anime.downvotes.push(req.user.username);
 			anime.save()
-			response.message = "Changed to  downvote"
+			response = {message: "Changed to downvote", code: -1}
 			
 		} else {
-			response.message = "Error 2"
+			response = {message: "Error 2", code: "err"}
 		}
 		
 	} else if(alreadyDownvoted >=0){
 		if(req.body.voteType === "up"){
-	        anime.downvotes.splice(alreadyUpvoted, 1)
+	        anime.downvotes.splice(alreadyDownvoted, 1)
 			anime.upvotes.push(req.user.username);
 			anime.save()
-			response.message = "Changed to upvote"
+			response = {message: "Changed to upvote", code: 1}
 			
 		} else if(req.body.voteType === "down"){
 		    anime.downvotes.splice(alreadyUpvoted, 1)
 			anime.save();
-			response.message = "Downvote removed"
+			response = {message: "Downvote removed", code: 0}
 		} else {
-			response.message ="Error 3"
+			response = {message: "Error 3", code: "err"}
 		}
 		
 	} else {
-		response.message = "Error 4"
+		response = {message: "Error 4", code: "err"}
 }
-	
+	response.score = anime.upvotes.length - anime.downvotes.length
 	res.json(response);
 })
 
