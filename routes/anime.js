@@ -79,9 +79,60 @@ router.post("/vote", isLoggedIn, async (req,res) =>{
 	console.log(req.body)
 	
 	const anime = await Anime.findById(req.body.animeId)
-	console.log(anime);
+	const alreadyUpvoted = anime.upvotes.indexOf(req.user.username); //Will be -1 if not found
+	const alreadyDownvoted = anime.downvotes.indexOf(req.user.username); //Will be -1 if not found
 	
-	res.json(anime);
+	
+	let response = {}
+	if(alreadyUpvoted === -1 && alreadyDownvoted === -1){
+		if(req.body.voteType === "up"){
+			anime.upvotes.push(req.user.username);
+			anime.save()
+			response.message = "Message tallied"
+		} else if(req.body.voteType === "down"){
+			anime.downvotes.push(req.user.username);
+			anime.save()
+			response.message = "Message tallied"
+		} else {
+			response.message = "Error 1"
+		}
+		
+		
+	} else if(alreadyUpvoted >=0 ) {
+		if(req.body.voteType === "up"){		
+		   anime.upvotes.splice(alreadyUpvoted, 1)
+			anime.save();
+			response.message = "Upvote removed"
+		} else if(req.body.voteType === "down"){
+		   anime.upvotes.splice(alreadyUpvoted, 1)			
+			anime.downvotes.push(req.user.username);
+			anime.save()
+			response.message = "Changed to  downvote"
+			
+		} else {
+			response.message = "Error 2"
+		}
+		
+	} else if(alreadyDownvoted >=0){
+		if(req.body.voteType === "up"){
+	        anime.downvotes.splice(alreadyUpvoted, 1)
+			anime.upvotes.push(req.user.username);
+			anime.save()
+			response.message = "Changed to upvote"
+			
+		} else if(req.body.voteType === "down"){
+		    anime.downvotes.splice(alreadyUpvoted, 1)
+			anime.save();
+			response.message = "Downvote removed"
+		} else {
+			response.message ="Error 3"
+		}
+		
+	} else {
+		response.message = "Error 4"
+}
+	
+	res.json(response);
 })
 
 router.get("/:id", async (req,res) =>{
@@ -93,7 +144,7 @@ router.get("/:id", async (req,res) =>{
 		console.log(err);
 		res.send("Broken Anime ID");
 	}
-})
+}) 
 
 router.get("/:id/edit", checkAnimeOwner, async (req,res) =>{
 	  const anime = await Anime.findById(req.params.id).exec()
