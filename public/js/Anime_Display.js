@@ -1,6 +1,9 @@
 const upvoteBtn = document.getElementById("upvoteBtn");
 const downvoteBtn = document.getElementById("downvoteBtn");
 const score = document.getElementById("score");
+document.getElementById("updownTrigger").style.visibility = "hidden"
+
+
 
 const sendVote = async (voteType) =>{
 	const options = {
@@ -61,10 +64,16 @@ const handleVote = (newScore,code)=>{
 }
 
 upvoteBtn.addEventListener("click", async function(){
-	sendVote("up");
+if(upvoteBtn.classList.contains("btn-outline-secondary")){
+   document.getElementById("updownTrigger").style.visibility = "visible"
+	} else {
+	sendVote("up");	
+	}
 });
 
 downvoteBtn.addEventListener("click", async function(){
-	sendVote("down");
-});
-
+if(downvoteBtn.classList.contains("btn-outline-secondary")){
+   document.getElementById("updownTrigger").style.visibility = "visible"
+	} else {
+	sendVote("down");	
+	}});
