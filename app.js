@@ -1,5 +1,5 @@
 //NPM Imports
-const express = require ("express");
+const express = require("express");
 const bodyParser = require("body-parser")
 const app = express();
 const mongoose = require('mongoose');
@@ -11,11 +11,11 @@ const expressSesion = require("express-session");
 const flash = require("connect-flash");
 
 //Config Import
-try{
-	var config = require("./config");
-} catch(err){
-	console.log("Not working locally");
-	console.log(err);
+try {
+  var config = require("./config");
+} catch (err) {
+  console.log("Not working locally");
+  console.log(err);
 }
 
 //Route Imports
@@ -33,15 +33,17 @@ const User = require("./models/user")
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.json({
-	type: ["application/json","text/plain"]
+  type: ["application/json", "text/plain"]
 }));
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(methodOverride("_method"));
 app.use(morgan("tiny"));
 app.use(expressSesion({
-	secret: process.env.ES_SECRET || config.expressSession.secret,
-	resave: false,
-	saveUninitialized: false
+  secret: process.env.ES_SECRET || config.expressSession.secret,
+  resave: false,
+  saveUninitialized: false
 }))
 app.use(flash());
 app.use(passport.initialize());
@@ -56,20 +58,28 @@ passport.use(new LocalStrategy(User.authenticate()));
 // seed();
 
 //Connect to DB
-try{
-	mongoose.connect(config.db.connection, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
-} catch(err) {
-	console.log("Not working locally");
-	mongoose.connect(process.env.DB_CONNECTION_STRING, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+try {
+  mongoose.connect(config.db.connection, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  });
+} catch (err) {
+  console.log("Not working locally");
+  mongoose.connect(process.env.DB_CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+  })
 }
 
 
 //Current User Middleware
-app.use((req,res,next) =>{
-	res.locals.user = req.user;
-	res.locals.errorMessage = req.flash("error");
-	res.locals.successMessage = req.flash("success")	
-	next();
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  res.locals.errorMessage = req.flash("error");
+  res.locals.successMessage = req.flash("success")
+  next();
 })
 
 //Use Routes
@@ -78,4 +88,6 @@ app.use("/", authRoutes)
 app.use("/anime", animeRoutes);
 app.use("/anime/:id/comments", commentsRoutes);
 
-app.listen(process.env.PORT ||3000, ()=>{console.log("Yelp Clone is running")});
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Yelp Clone is running")
+});
