@@ -7,7 +7,7 @@
         <img class="card-img card-img-top" src="<%= anime.image %>" alt="Picture of the Anime">
       </a>
       <h3 class="card-title mt-3"><%=anime.title %></h3>
-      <p class="card-text mb-3 mx-3"><%= anime.description %></p>
+      <p class="card-text mb-3 mx-3"><%= anime.description.substring(0,180) + "..." %></p>
     </div>
     <% }) %>
   </div>
