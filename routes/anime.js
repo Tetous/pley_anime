@@ -186,7 +186,7 @@ router.get("/:id", async (req, res) => {
     })
   } catch (err) {
     console.log(err);
-    res.send("Broken Anime ID");
+    res.render("error");
   }
 })
 
