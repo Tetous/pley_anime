@@ -10,4 +10,8 @@ router.get("/account", isLoggedIn, (req, res) => {
   res.render("Account");
 })
 
+router.get("*", (req,res) =>{
+	res.render("error");
+})
+
 module.exports = router;
