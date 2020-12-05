@@ -87,6 +87,9 @@ app.use("/", mainRoutes);
 app.use("/", authRoutes)
 app.use("/anime", animeRoutes);
 app.use("/anime/:id/comments", commentsRoutes);
+app.get("*", (req,res) =>{
+	res.render("error");
+})
 
 app.listen(process.env.PORT || 3000, () => {
   console.log("Yelp Clone is running")
