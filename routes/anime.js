@@ -70,7 +70,7 @@ router.get("/search", async (req, res) => {
 })
 
 router.get("/genre/:genre", async (req, res) => {
-  const validGenres = ["action", "slice-of-life", "sports", "comedy", "horror", "thirller"];
+  const validGenres = ["action", "slice-of-life", "sports", "comedy", "horror", "thriller", "magic","fantasy","sci-fi"];
   if (validGenres.includes(req.params.genre.toLowerCase())) {
     const anime = await Anime.find({
       genre: req.params.genre
@@ -79,7 +79,7 @@ router.get("/genre/:genre", async (req, res) => {
       anime
     })
   } else {
-    res.send("Please enter a valid genre");
+    res.render("error");
   }
 });
 
